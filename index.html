@@ -1,33 +1,56 @@
 <html>
   <title>Promises Sandbox</title>
   <head>
+    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
     <script src="jquery-1.11.1.min.js"></script>
     <script src="rsvp-latest.js"></script>
     <script src="main.js"></script>
     <script src="examples.js"></script>
   </head>
   <body>
-    <h1>Promises</h1>
-    <select name="example-selector">
-      <option value="">-- Select an example --</option>
-      <option value="example-1">Resolve and reject</option>
-      <option value="example-2">Simple chains</option>
-      <option value="example-3">Chaining with missing handlers</option>
-      <option value="example-4">Error handling at the end of the chain</option>
-    </select>
-    <div class="example">
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12">
+          <h1>Promises</h1>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-6">
+          <h3>Select example</h3>
+          <select name="example-selector">
+            <option value="">-- Select an example --</option>
+            <option value="example-1">Resolve and reject</option>
+            <option value="example-2">Simple chains</option>
+            <option value="example-3">Chaining with missing handlers</option>
+            <option value="example-4">Error handling at the end of the chain</option>
+          </select>
+          <div>
+            <h3>Example code</h3>
+            <pre class="example">
+            </pre>
+          </div>
+          <div>
+            <h3>Output</h3>
+            <pre class="results">
+            </pre>
+          </div>
+        </div>
+        <div class="col-xs-6">
+          <h3>Library code</h3>
+          <pre class="library">
+          </pre>
+        </div>
+      </div>
     </div>
-    <div class="results">
-    </div>
+
     <script>
     $(function() {
+      // $('.library').html(library.toString());
       $('select[name=example-selector]').on('change', function() {
         var name = $(this).val();
         var example = prettyExample(name);
         $('.example').html(example);
-
         $('.results').html(runExample(name));
-        // runExample($(this).val());
       });
     });
     </script>

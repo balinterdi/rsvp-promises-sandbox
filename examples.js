@@ -1,11 +1,5 @@
 (function() {
-  //TODO: Make Step x displays appear in the right order
-  // resolve("Step 1")
-  // .then(function(step) {
-  //   return logAndReturn(step, "rhino")
-  // });
-
-  // Step 1: Basic resolve and reject
+  // Example 1: Basic resolve and reject
   function example1() {
     resolve("rhino").then(logAndReturn); // => rhino
     reject("snake").then(null, logAndReturn); // => snake
@@ -13,7 +7,7 @@
 
   addExample('example-1', example1);
 
-  // Step 2: Simple chains
+  // Example 2: Simple chains
   function example2() {
     resolve("rhino")
     .then(function(animal) {
@@ -24,7 +18,7 @@
 
   addExample('example-2', example2);
 
-  // Chaining with missing handlers
+  // Example 3: Chaining with missing handlers
   function example3() {
     // "If onFulfilled is not a function and promise1 is fulfilled, promise2 must
     // be fulfilled with the same value as promise1."
@@ -43,7 +37,7 @@
   }
   addExample('example-3', example3);
 
-  // Error handling at the end of the chain
+  // Example 4: Error handling at the end of the chain
   function example4() {
     resolve("rhino")
     .then(log)
@@ -54,5 +48,4 @@
   }
 
   addExample('example-4', example4);
-
 })();

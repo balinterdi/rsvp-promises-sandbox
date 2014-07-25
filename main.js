@@ -1,15 +1,7 @@
 var examples = {};
 
 function prettyExample(name) {
-  var example = examples[name].toString();
-  example = example.replace(/\n/g, "<br />");
-  return example.replace(/\s{2,}/g, function(indent) {
-    var htmlIndent = [];
-    for (var i=0; i<indent.length; i++) {
-      htmlIndent.push("&nbsp;");
-    }
-    return htmlIndent.join('');
-  });
+  return examples[name].toString();
 };
 
 function runExample(name) {
