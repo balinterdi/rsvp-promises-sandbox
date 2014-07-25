@@ -1,0 +1,35 @@
+<html>
+  <title>Promises Sandbox</title>
+  <head>
+    <script src="jquery-1.11.1.min.js"></script>
+    <script src="rsvp-latest.js"></script>
+    <script src="main.js"></script>
+    <script src="examples.js"></script>
+  </head>
+  <body>
+    <h1>Promises</h1>
+    <select name="example-selector">
+      <option value="">-- Select an example --</option>
+      <option value="example-1">Resolve and reject</option>
+      <option value="example-2">Simple chains</option>
+      <option value="example-3">Chaining with missing handlers</option>
+      <option value="example-4">Error handling at the end of the chain</option>
+    </select>
+    <div class="example">
+    </div>
+    <div class="results">
+    </div>
+    <script>
+    $(function() {
+      $('select[name=example-selector]').on('change', function() {
+        var name = $(this).val();
+        var example = prettyExample(name);
+        $('.example').html(example);
+
+        $('.results').html(runExample(name));
+        // runExample($(this).val());
+      });
+    });
+    </script>
+  </body>
+</html>
