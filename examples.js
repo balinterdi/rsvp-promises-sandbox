@@ -79,6 +79,29 @@
   }
 
   addExample('example-5', example5);
+
+  function example6() {
+    function wait(time) {
+      return new RSVP.Promise(function(resolve) {
+        setTimeout(function() {
+          resolve();
+        }, time);
+      });
+    }
+    var promise = wait(3000);
+    var checked = 1;
+    function checkPromise() {
+      logAndReturn('Checked ' + checked + ' times, state: ' + promise._state);
+      checked++;
+      timer = setTimeout(checkPromise, 500);
+    }
+    var timer = setTimeout(checkPromise, 500);
+    promise.then(function() {
+      logAndReturn('Promise resolved, state: ' + promise._state);
+      clearTimeout(timer);
+    });
+  }
+  addExample('example-6', example6);
 })();
 
 
