@@ -102,6 +102,41 @@
     });
   }
   addExample('example-6', example6);
+
+  function example7() {
+    function retry(promiseGenerator, retries) {
+      return new RSVP.Promise(function(resolve, reject) {
+        return promiseGenerator().then(function(value) {
+          log(value);
+          resolve(value);
+        }, function(reason) {
+          log(reason + ", " + retries + " tries left");
+          if (retries > 0) {
+            return retry(promiseGenerator, retries-1);
+          } else {
+            reject(reason);
+          }
+        });
+      });
+    }
+
+    function diceToss() {
+      return new RSVP.Promise(function(resolve, reject) {
+        var n = Math.floor(Math.random() * 6) + 1;
+        log("Rolled a " + n);
+        if (n === 6) {
+          resolve("Yay, rolled a 6");
+        } else {
+          reject("Ah, can't roll a 6");
+        }
+      });
+    }
+
+    retry(diceToss, 2)
+      .then(function(value)  { console.log('Success! ' + value) },
+            function(reason) { console.log('Too bad! ' + reason) });
+  }
+  addExample('example-7', example7);
 })();
 
 
