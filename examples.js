@@ -104,19 +104,21 @@
   addExample('example-6', example6);
 
   function example7() {
-    function retry(promiseGenerator, retries) {
+    function retry(promiseGenerator, tries) {
       return new RSVP.Promise(function(resolve, reject) {
-        return promiseGenerator().then(function(value) {
-          log(value);
-          resolve(value);
-        }, function(reason) {
-          log(reason + ", " + retries + " tries left");
-          if (retries > 0) {
-            return retry(promiseGenerator, retries-1);
-          } else {
-            reject(reason);
-          }
-        });
+        var succeeded = false,
+            successValue;
+        while (!succeeded && tries) {
+          promiseGenerator().then(function(value) {
+            log(value);
+            succeeded = true;
+            successValue = value;
+          }, function(reason) {
+            tries--;
+            log(reason + ", " + tries + " tries left");
+          });
+        }
+        succeeded ? resolve(successValue) : reject();
       });
     }
 
@@ -132,7 +134,7 @@
       });
     }
 
-    retry(diceToss, 2)
+    retry(diceToss, 3)
       .then(function(value)  { console.log('Success! ' + value) },
             function(reason) { console.log('Too bad! ' + reason) });
   }
