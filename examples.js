@@ -103,36 +103,36 @@
   }
   addExample('example-6', example6);
 
+  function diceToss() {
+    return new RSVP.Promise(function(resolve, reject) {
+      setTimeout(function() {
+        var n = Math.floor(Math.random() * 6) + 1;
+        log("Rolled a " + n);
+        if (n === 6) {
+          resolve("Yay, rolled a 6");
+        } else {
+          reject("Ah, can't roll a 6");
+        }
+      }, 0);
+    });
+  }
+
   function example7() {
     function retry(promiseGenerator, n) {
       return new RSVP.Promise(function(resolve, reject) {
         (function tryIt(retries, success, failure) {
-            promiseGenerator().then(function(value) {
-              log(value);
-              success(value);
-            }, function(reason) {
-              log(reason + ", " + retries + " tries left");
-              if (retries > 0) {
-                tryIt(retries-1, success, failure);
-              } else {
-                failure(reason);
-              }
-            });
+          promiseGenerator().then(function(value) {
+            log(value);
+            success(value);
+          }, function(reason) {
+            log(reason + ", " + retries + " tries left");
+            if (retries > 0) {
+              tryIt(retries-1, success, failure);
+            } else {
+              failure(reason);
+            }
+          });
         })(n, resolve, reject);
-      });
-    }
-
-    function diceToss() {
-      return new RSVP.Promise(function(resolve, reject) {
-        setTimeout(function() {
-          var n = Math.floor(Math.random() * 6) + 1;
-          log("Rolled a " + n);
-          if (n === 6) {
-            resolve("Yay, rolled a 6");
-          } else {
-            reject("Ah, can't roll a 6");
-          }
-        }, 0);
       });
     }
 
@@ -141,6 +141,34 @@
             function(reason) { log('Failure :( ' + reason) });
   }
   addExample('example-7', example7);
+
+  function example8() {
+    function retry(promiseGenerator, n) {
+      return new RSVP.Promise(function(resolve, reject) {
+        (function tryIt(retries, delay, success, failure) {
+          setTimeout(function() {
+            promiseGenerator().then(function(value) {
+              log(value);
+              success(value);
+            }, function(reason) {
+              log(reason + ", " + retries + " tries left");
+              if (retries > 0) {
+                delay = delay === 0 ? 200 : delay * 2;
+                tryIt(retries-1, delay, success, failure);
+              } else {
+                failure(reason);
+              }
+            });
+          }, delay);
+        })(n, 0, resolve, reject);
+      });
+    }
+
+    retry(diceToss, 10)
+      .then(function(value)  { log('Success :) ' + value) },
+            function(reason) { log('Failure :( ' + reason) });
+  }
+  addExample('example-8', example8);
 })();
 
 
