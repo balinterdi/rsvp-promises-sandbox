@@ -104,17 +104,21 @@
   addExample('example-6', example6);
 
   function example7() {
-    function retry(promiseGenerator, tryCount) {
+    function retry(promiseGenerator, n) {
       return new RSVP.Promise(function(resolve, reject) {
-        var tries = [];
-        for (var i=0; i<tryCount; i++ ) { tries.push(promiseGenerator()); }
-        return RSVP.any(tries).then(function(result) {
-          log('Retry successful: ' + result);
-          resolve(result);
-        }, function(reason) {
-          log('Retry failed ' + reason);
-          reject(reason);
-        });
+        (function tryIt(retries, success, failure) {
+            promiseGenerator().then(function(value) {
+              log(value);
+              success(value);
+            }, function(reason) {
+              log(reason + ", " + retries + " tries left");
+              if (retries > 0) {
+                tryIt(retries-1, success, failure);
+              } else {
+                failure(reason);
+              }
+            });
+        })(n, resolve, reject);
       });
     }
 
@@ -132,9 +136,9 @@
       });
     }
 
-    retry(diceToss, 3)
-      .then(function(value)  { console.log('Success :) ' + value) },
-            function(reason) { console.log('Failure :( ' + reason) });
+    retry(diceToss, 2)
+      .then(function(value)  { log('Success :) ' + value) },
+            function(reason) { log('Failure :( ' + reason) });
   }
   addExample('example-7', example7);
 })();
