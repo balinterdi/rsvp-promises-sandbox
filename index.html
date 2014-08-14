@@ -27,6 +27,7 @@
             <option value="example-6">Checking promise resolution</option>
             <option value="example-7">Retry</option>
           </select>
+          <button type="button" class="rerun-button">Rerun</button>
           <div>
             <h3>Example code</h3>
             <pre class="example">
@@ -47,13 +48,25 @@
     </div>
 
     <script>
+    function run(name) {
+      var example = prettyExample(name);
+      $('.example').html(example);
+      $('.results').html(runExample(name));
+    }
+
     $(function() {
       // $('.library').html(library.toString());
       $('select[name=example-selector]').on('change', function() {
         var name = $(this).val();
-        var example = prettyExample(name);
-        $('.example').html(example);
-        $('.results').html(runExample(name));
+        clearResults();
+        run(name);
+      });
+
+      $('button.rerun-button').on('click', function() {
+        var exampleSelector$ = $('select[name=example-selector]');
+        var name = exampleSelector$.val();
+        clearResults();
+        run(name);
       });
     });
     </script>

@@ -104,39 +104,37 @@
   addExample('example-6', example6);
 
   function example7() {
-    function retry(promiseGenerator, tries) {
+    function retry(promiseGenerator, tryCount) {
       return new RSVP.Promise(function(resolve, reject) {
-        var succeeded = false,
-            successValue;
-        while (!succeeded && tries) {
-          promiseGenerator().then(function(value) {
-            log(value);
-            succeeded = true;
-            successValue = value;
-          }, function(reason) {
-            tries--;
-            log(reason + ", " + tries + " tries left");
-          });
-        }
-        succeeded ? resolve(successValue) : reject();
+        var tries = [];
+        for (var i=0; i<tryCount; i++ ) { tries.push(promiseGenerator()); }
+        return RSVP.any(tries).then(function(result) {
+          log('Retry successful: ' + result);
+          resolve(result);
+        }, function(reason) {
+          log('Retry failed ' + reason);
+          reject(reason);
+        });
       });
     }
 
     function diceToss() {
       return new RSVP.Promise(function(resolve, reject) {
-        var n = Math.floor(Math.random() * 6) + 1;
-        log("Rolled a " + n);
-        if (n === 6) {
-          resolve("Yay, rolled a 6");
-        } else {
-          reject("Ah, can't roll a 6");
-        }
+        setTimeout(function() {
+          var n = Math.floor(Math.random() * 6) + 1;
+          log("Rolled a " + n);
+          if (n === 6) {
+            resolve("Yay, rolled a 6");
+          } else {
+            reject("Ah, can't roll a 6");
+          }
+        }, 0);
       });
     }
 
     retry(diceToss, 3)
-      .then(function(value)  { console.log('Success! ' + value) },
-            function(reason) { console.log('Too bad! ' + reason) });
+      .then(function(value)  { console.log('Success :) ' + value) },
+            function(reason) { console.log('Failure :( ' + reason) });
   }
   addExample('example-7', example7);
 })();

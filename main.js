@@ -19,6 +19,25 @@ function addExample(name, fn) {
 var resolve = RSVP.resolve;
 var reject =  RSVP.reject;
 
+RSVP.invert = function(promise) {
+  return new RSVP.Promise(function(resolve, reject) {
+    promise.then(reject, resolve);
+  });
+}
+
+RSVP.any = function(promises) {
+  var invertedPromises = promises.map(function(promise) {
+    return RSVP.invert(promise);
+  });
+  return new RSVP.Promise(function(resolve, reject) {
+    RSVP.all(invertedPromises).then(function(results) {
+      reject(results);
+    }, function(reason) {
+      resolve(reason);
+    });
+  });
+}
+
 function logAndReturn(x, y) {
   $('.results').append('<div>' + x + '</div>');
   return y ? y : x;
@@ -30,6 +49,10 @@ function logErrorAndReturn(x, y) {
 
 function log(x) {
   $('.results').append("<div>" + x + "</div>");
+}
+
+function clearResults() {
+  $('.results').html('');
 }
 
       // promise2 = promise1.then(onFulfilled, onRejected)
