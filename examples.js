@@ -164,6 +164,41 @@
             function(reason) { log('Failure :( ' + reason) });
   }
   addExample('example-8', example8);
+
+  function randomDelay() {
+    return Math.floor(Math.random() * 200);
+  }
+
+  function example9() {
+    function delayedResolve(value, delay) {
+      return new RSVP.Promise(function(resolve) {
+        setTimeout(function() {
+          log(value);
+          resolve(value);
+        }, delay || randomDelay());
+      });
+    }
+
+    function delayedReject(value, delay) {
+      return new RSVP.Promise(function(_, reject) {
+        setTimeout(function() {
+          log(value);
+          reject(value);
+        }, delay || randomDelay());
+      });
+    }
+
+    var promise1 = delayedResolve("Promise 1", 100);
+    var promise2 = delayedResolve("Promise 2");
+    var promise3 = delayedReject("Promise 3");
+    var promises = [promise1, promise2, promise3];
+    return RSVP.Promise.race(promises).then(function(value) {
+      log(value + " succeeded");
+    }, function(reason) {
+      log(reason + " failed");
+    });
+  }
+  addExample('example-9', example9);
 })();
 
 
