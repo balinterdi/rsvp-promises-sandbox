@@ -50,34 +50,29 @@
 
   function example5() {
     function animalPromise(animal) {
-      console.log('2');
+      log('2');
       return new RSVP.Promise(function(resolve, reject) {
-        setTimeout(function() {
-          console.log('4');
-          var niceAnimals = ['rhino', 'elephant', 'dolphin'];
-          if (niceAnimals.indexOf(animal) !== -1) {
-            resolve(animal);
-          } else {
-            reject(animal);
-          }
-        }, 0);
+        log('3');
+        var niceAnimals = ['rhino', 'elephant', 'dolphin'];
+        if (niceAnimals.indexOf(animal) !== -1) {
+          resolve(animal);
+        } else {
+          reject(animal);
+        }
       });
     }
-    console.log('1');
+    log('1');
     var promise = animalPromise('dolphin');
-    console.log('3');
+    log('4');
     promise.then(function(animal) {
-      console.log('5');
-      console.log("A " + animal + " is a nice animal");
+      log('6');
+      log("A " + animal + " is a nice animal");
     });
+    log('5');
     promise.then(function(animal) {
-      console.log("I like " + animal + "s");
-    });
-    promise.then(null, function(animal) {
-      console.log("Not a fan of " + animal + "s");
+      log("I like " + animal + "s");
     });
   }
-
   addExample('example-5', example5);
 
   function example6() {
